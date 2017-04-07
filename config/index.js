@@ -5,7 +5,7 @@ mongoose.plugin(require('mongoose-hidden')({
   defaultHidden: { _id: false, password: true, '_v': true }
 }));
 
-var HTTP_PORT  = process.env.HTTP_PORT || 8900;
+var HTTP_PORT  = process.env.HTTP_PORT || 5000;
 
 module.exports = {
   // HTTP PORT
