@@ -12,7 +12,9 @@ module.exports = {
   HTTP_PORT: HTTP_PORT,
 
   // MONGODB URL
-  MONGODB_URL: 'mongodb://localhost/geberew',
+//  MONGODB_URL: 'mongodb://localhost/geberew',
+  //MONGODB_URL: 'mongodb://geberew:geberew@2017@ds117899.mlab.com:17899/geberew',
+ MONGODB_URL:'mongodb://yoni:yoni@ds117899.mlab.com:17899/geberew',
     
   // SALT VALUE LENGTH
   SALT_LENGTH :11,
