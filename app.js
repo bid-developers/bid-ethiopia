@@ -8,20 +8,20 @@ var config      = require('./config');
 
 var router      = require('./routes');
 
-// // Connect to Mongodb
-// mongoose.connect(config.MONGODB_URL);
-// // listen to connection event
-// mongoose.connection.on('connected', function mongodbConnectionListener() {
-//   debug('Mongodb Connected successfully');
-// });
-// // handle error event
-// mongoose.connection.on('error', function mongodbErrorListener() {
-//   debug('Connection to Mongodb Failed!!');
+// Connect to Mongodb
+mongoose.connect(config.MONGODB_URL);
+// listen to connection event
+mongoose.connection.on('connected', function mongodbConnectionListener() {
+  debug('Mongodb Connected successfully');
+});
+// handle error event
+mongoose.connection.on('error', function mongodbErrorListener() {
+  debug('Connection to Mongodb Failed!!');
 
-//   // Try and Reconnect
-//   mongoose.connect(config.MONGODB_URL);
+  // Try and Reconnect
+  mongoose.connect(config.MONGODB_URL);
 
-// });
+});
 // Initialize app
 var app = express();
 
@@ -67,6 +67,7 @@ app.use(function errorHandler(err, req, res, next) {
 // Listen to HTTP Port
 app.listen(config.HTTP_PORT, function connectionListener() {
   debug('GEBEREW API Server running on port %s', config.HTTP_PORT);
+  console.log('GEBEREW API Server running on port');
 });
 
 module.exports= app;
