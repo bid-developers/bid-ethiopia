@@ -13,10 +13,12 @@ mongoose.connect(config.MONGODB_URL);
 // listen to connection event
 mongoose.connection.on('connected', function mongodbConnectionListener() {
   debug('Mongodb Connected successfully');
+  console.log('Mongodb Connected successfully');
 });
 // handle error event
 mongoose.connection.on('error', function mongodbErrorListener() {
   debug('Connection to Mongodb Failed!!');
+   console.log('Connection to Mongodb Failed!!');
 
   // Try and Reconnect
   mongoose.connect(config.MONGODB_URL);
