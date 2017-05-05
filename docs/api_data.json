@@ -1,6 +1,59 @@
 [
   {
     "type": "post",
+    "url": "/events",
+    "title": "Create Event",
+    "name": "Create_Event",
+    "group": "Event",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "subject",
+            "description": "<p>Event Subjetc</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "location",
+            "description": "<p>Event Location</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": false,
+            "field": "event_date",
+            "description": "<p>Event Date</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request Exmaple",
+          "content": "{\n  \"subject\":\"How TO improve SW Development\",\n  \"location\":\"ADDIS ABEBA\",\n  \"event_date\":\"1/1/2019\",\n  \"event_date\":\"engida\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n    {\n    \"_id\": \"589fb45b48baee02dc7c713b\",\n  \"subject\":\"How TO improve SW Development\",\n  \"location\":\"ADDIS ABEBA\",\n  \"event_date\":\"1/1/2019\",\n  \"event_date\":\"engida\",\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/event.js",
+    "groupTitle": "Event"
+  },
+  {
+    "type": "post",
     "url": "/users/passchange",
     "title": "Password Change",
     "name": "ChangePassword",
