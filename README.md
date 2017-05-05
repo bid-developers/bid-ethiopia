@@ -1,10 +1,5 @@
 # GEBEREW API FOR ETHIOHACKS EVENT.
 
 #Project Title
-GEBERE BERSHA'LAY 
+BID-EVENTS
 #Team Members
-
-1. DILU KEALE   (System Engineer)
-2. DANIEL       (UX/UI Designer)
-3. NEBIYU NEGA  (Mobile App Engineer)
-4. YONAS ENGIDA (BACKEND API ENGINEER)
