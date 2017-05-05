@@ -1,4 +1,4 @@
-// Access Layer for Farmer Data.
+// Access Layer for User Data.
 
 // NOTES:
 // .population() specifies the references that you want
@@ -8,50 +8,42 @@
 /**
  * Load Module Dependencies.
  */
-var debug   = require('debug')('api:dal-farmer');
+var debug   = require('debug')('api:dal-user');
 var moment  = require('moment');
 
-var Farmer        = require('../models/farmer');
+var User        = require('../models/user');
 
-// var population = [{ 
-//      path: 'land'
-//   }
-// ];
-var population = [{ 
-    path: 'land',
-     populate: {
-       path: 'land',
-       model: 'Land'
-     } 
-  }
-];
+var population = [{
+  path: 'profile'
+}];
+
 /**
- * create a new farmer.
+ * create a new user.
  *
- * @desc  creates a new farmer and saves them
+ * @desc  creates a new user and saves them
  *        in the database
  *
- * @param {Object}  FarmerData  Data for the Farmer to create
+ * @param {Object}  userData  Data for the user to create
  * @param {Function} cb       Callback for once saving is complete
  */
-exports.create = function create(farmerData, cb) {
-  debug('creating a new farmer');
+exports.create = function create(userData, cb) {
+  debug('creating a new user');
 
-  // Create Farmer
-  var FarmerModel  = new Farmer(farmerData);
+  // Create user
+  var userModel  = new User(userData);
 
-  FarmerModel.save(function saveFarmer(err, data) {
+  userModel.save(function saveUser(err, data) {
     if (err) {
       return cb(err);
     }
 
 
-    exports.get({ _id: data._id }, function (err, farmer) {
+    exports.get({ _id: data._id }, function (err, user) {
       if(err) {
         return cb(err);
       }
 
-      cb(null, farmer);
+      cb(null, user);
 
     });
 
@@ -60,35 +52,35 @@ exports.create = function create(farmerData, cb) {
 };
 
 /**
- * delete a farmer
+ * delete a user
  *
- * @desc  delete data of the farmer with the given
+ * @desc  delete data of the user with the given
  *        id
  *
  * @param {Object}  query   Query Object
  * @param {Function} cb Callback for once delete is complete
  */
 exports.delete = function deleteItem(query, cb) {
-  debug('deleting farmer: ', query);
+  debug('deleting user: ', query);
 
-  Farmer
-    .findOne(query)
+  User
+    .findOne(query, returnFields)
     .populate(population)
-    .exec(function deleteFarmer(err, farmer) {
+    .exec(function deleteUser(err, user) {
       if (err) {
         return cb(err);
       }
 
-      if(!farmer) {
+      if(!user) {
         return cb(null, {});
       }
 
-      Farmer.remove(function(err) {
+      user.remove(function(err) {
         if(err) {
           return cb(err);
         }
 
-        cb(null, farmer);
+        cb(null, user);
 
       });
 
@@ -96,96 +88,91 @@ exports.delete = function deleteItem(query, cb) {
 };
 
 /**
- * update a farmer
+ * update a user
  *
- * @desc  update data of the farmer with the given
+ * @desc  update data of the user with the given
  *        id
  *
  * @param {Object} query Query object
  * @param {Object} updates  Update data
  * @param {Function} cb Callback for once update is complete
  */
-exports.update = function update(query, updates,  cb) {
-  debug('updating farmer: ', query);
+exports.update = function update(query, updates, cb) {
+  debug('updating user: ', query);
 
   var now = moment().toISOString();
 
   updates.last_modified = now;
 
-  Farmer
+  User
     .findOneAndUpdate(query, updates)
     .populate(population)
-    .exec(function updateFarmer(err, farmer) {
+    .exec(function updateUser(err, user) {
       if(err) {
         return cb(err);
       }
 
-      cb(null, farmer || {});
+      cb(null, user || {});
     });
 };
 
 /**
- * get a farmer.
+ * get a user.
  *
- * @desc get a farmer with the given id from db
+ * @desc get a user with the given id from db
  *
  * @param {Object} query Query Object
  * @param {Function} cb Callback for once fetch is complete
  */
 exports.get = function get(query, cb) {
-  debug('getting farmer ', query);
+  debug('getting user ', query);
 
-  Farmer
+  User
     .findOne(query)
     .populate(population)
-    .exec(function(err, farmer) {
+    .exec(function(err, user) {
       if(err) {
         return cb(err);
       }
 
-      cb(null, farmer || {});
+      cb(null, user || {});
     });
 };
 
 /**
- * get a collection of farmers
+ * get a collection of users
  *
- * @desc get a collection of farmers from db
+ * @desc get a collection of users from db
  *
  * @param {Object} query Query Object
  * @param {Function} cb Callback for once fetch is complete
  */
 exports.getCollection = function getCollection(query, cb) {
-  debug('fetching a collection of farmers');
-/**
- * Mongoose 4.5 support this
+  debug('fetching a collection of users');
 
-Project.find(query)
-  .populate({ 
-     path: 'pages',
-     populate: {
-       path: 'components',
-       model: 'Component'
-     } 
-  })
-  .exec(function(err, docs) {});
- */
- Farmer.find(query)
-.populate(population)
-    .exec(function getFarmersCollection(err, farmers) {
+  User.find(query)
+    .populate(population)
+    .exec(function getUsersCollection(err, users) {
       if(err) {
         return cb(err);
       }
-
-     return cb(null, farmers);
-
+      
+      return cb(null, users);
   });
 
 };
 
 exports.getCollectionBYPagination = function getCollectionBYPagination(query,queryOpts, cb) {
 
-  Farmer.paginate(query, queryOpts, function (err, result) {
+   var opts = {
+   
+    populate: population,
+    page:     queryOpts.page,
+    limit:queryOpts.limit
+   
+  };
+
+  User.paginate(query, opts, function (err, result) {
     // result.docs
     // result.total
     // result.limit - 10
@@ -196,5 +183,15 @@ exports.getCollectionBYPagination = function getCollectionBYPagination(query,que
       return cb(err);
     }
     return cb(null, result);
+  });
+};
+
+exports.total = function total(query,cb){
+  debug("Count Users Collection");
+   User.count({}, function(err, count){
+     if(err){
+       return cb(err);
+     }
+     return cb(null,count);
   });
 };
