@@ -1,4 +1,4 @@
-// Access Layer for Land Data.
+// Access Layer for Event Data.
 
 // NOTES:
 // .population() specifies the references that you want
@@ -8,44 +8,42 @@
 /**
  * Load Module Dependencies.
  */
-var debug   = require('debug')('api:dal-land');
+var debug   = require('debug')('api:dal-event');
 var moment  = require('moment');
 
-var Land        = require('../models/land');
+var event        = require('../models/event');
 
-var population = [
-  { 
-     path: 'farmer'
-  }
-];
+var population = [{
+  path: 'Event'
+}];
 
 /**
- * create a new Land.
+ * create a new Event.
  *
- * @desc  creates a new Land and saves them
+ * @desc  creates a new Event and saves them
  *        in the database
  *
- * @param {Object}  landData  Data for the Land to create
+ * @param {Object}  EventData  Data for the Event to create
  * @param {Function} cb       Callback for once saving is complete
  */
-exports.create = function create(landData, cb) {
-  debug('creating a new land');
+exports.create = function create(eventData, cb) {
+  debug('creating a new Event');
 
-  // Create Land
-  var landModel  = new Land(landData);
+  // Create Event
+  var EventModel  = new Event(eventData);
 
-  landModel.save(function saveLand(err, data) {
+  EventModel.save(function saveEvent(err, data) {
     if (err) {
       return cb(err);
     }
 
 
-    exports.get({ _id: data._id }, function (err, land) {
+    exports.get({ _id: data._id }, function (err, event) {
       if(err) {
         return cb(err);
       }
 
-      cb(null, land);
+      cb(null, event);
 
     });
 
@@ -54,35 +52,35 @@ exports.create = function create(landData, cb) {
 };
 
 /**
- * delete a land
+ * delete a Event
  *
- * @desc  delete data of the land with the given
+ * @desc  delete data of the Event with the given
  *        id
  *
  * @param {Object}  query   Query Object
  * @param {Function} cb Callback for once delete is complete
  */
 exports.delete = function deleteItem(query, cb) {
-  debug('deleting land: ', query);
+  debug('deleting Event: ', query);
 
-  Land
-    .findOne(query)
+  Event
+    .findOne(query, returnFields)
     .populate(population)
-    .exec(function deleteLand(err, land) {
+    .exec(function deleteEvent(err, event) {
       if (err) {
         return cb(err);
       }
 
-      if(!land) {
+      if(!event) {
         return cb(null, {});
       }
 
-      Land.remove(function(err) {
+      Event.remove(function(err) {
         if(err) {
           return cb(err);
         }
 
-        cb(null, land);
+        cb(null, event);
 
       });
 
@@ -90,9 +88,9 @@ exports.delete = function deleteItem(query, cb) {
 };
 
 /**
- * update a Land
+ * update a Event
  *
- * @desc  update data of the land with the given
+ * @desc  update data of the Event with the given
  *        id
  *
  * @param {Object} query Query object
@@ -100,85 +98,72 @@ exports.delete = function deleteItem(query, cb) {
  * @param {Function} cb Callback for once update is complete
  */
 exports.update = function update(query, updates,  cb) {
-  debug('updating Land: ', query);
+  debug('updating Event: ', query);
 
   var now = moment().toISOString();
 
   updates.last_modified = now;
 
-  Land
+  Event
     .findOneAndUpdate(query, updates)
     .populate(population)
-    .exec(function updateLand(err, Land) {
+    .exec(function updateEvent(err, event) {
       if(err) {
         return cb(err);
       }
 
-      cb(null, Land || {});
+      cb(null, event || {});
     });
 };
 
 /**
- * get a Land.
+ * get a Event.
  *
- * @desc get a Land with the given id from db
+ * @desc get a Event with the given id from db
  *
  * @param {Object} query Query Object
  * @param {Function} cb Callback for once fetch is complete
  */
 exports.get = function get(query, cb) {
-  debug('getting Land ', query);
-  Land
+  debug('getting Event ', query);
+
+  Event
     .findOne(query)
     .populate(population)
-    .exec(function(err, Land) {
+    .exec(function(err, event) {
       if(err) {
         return cb(err);
       }
 
-      cb(null, Land || {});
+      cb(null, event || {});
     });
 };
 
 /**
- * get a collection of Lands
+ * get a collection of Events
  *
- * @desc get a collection of Lands from db
+ * @desc get a collection of Events from db
  *
  * @param {Object} query Query Object
  * @param {Function} cb Callback for once fetch is complete
  */
 exports.getCollection = function getCollection(query, cb) {
-  debug('fetching a collection of Lands');
-/**
- * Mongoose 4.5 support this
+  debug('fetching a collection of Events');
 
-Project.find(query)
-  .populate({ 
-     path: 'pages',
-     populate: {
-       path: 'components',
-       model: 'Component'
-     } 
-  })
-  .exec(function(err, docs) {});
- */
- Land.find(query)
-.populate(population)
-    .exec(function getLandsCollection(err, Lands) {
+ Event.find(query)
+    .populate(population)
+    .exec(function getEventsCollection(err, events) {
       if(err) {
         return cb(err);
       }
 
-     return cb(null, Lands);
-
+      return cb(null, events);
   });
 
 };
-
 exports.getCollectionBYPagination = function getCollectionBYPagination(query,queryOpts, cb) {
 
-  Land.paginate(query, queryOpts, function (err, result) {
+  Event.paginate(query, queryOpts, function (err, result) {
     // result.docs
     // result.total
     // result.limit - 10

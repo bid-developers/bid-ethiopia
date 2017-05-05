@@ -1,8 +1,8 @@
 {
-  "name": "GEBREW API",
+  "name": "BID-EVENTS API",
   "version": "1.0.0",
   "description": "HTTP API service",
-  "title": "GEBREW API documentation",
-  "doc-url": ""
+  "title": "BID-EVENTS API documentation",
+  "url": "<base_url>"
 }
 

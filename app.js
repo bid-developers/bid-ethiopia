@@ -1,7 +1,7 @@
 // Load Module Dependencies
 var express     = require('express');
 var bodyParser  = require('body-parser');
-var debug       = require('debug')('geberew-api');
+var debug       = require('debug')('autar-api');
 var mongoose    = require('mongoose');
 var expressValidator= require('express-validator');
 var config      = require('./config');
@@ -28,7 +28,9 @@ mongoose.connection.on('error', function mongodbErrorListener() {
 var app = express();
 
 // Set Middleware
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
+app.use(bodyParser.json({limit:'50mb'})); 
+app.use(bodyParser.urlencoded({extended:true, limit:'50mb'}));
 // Error Handlers
 app.use(expressValidator());
 
@@ -68,8 +70,8 @@ app.use(function errorHandler(err, req, res, next) {
 
 // Listen to HTTP Port
 app.listen(config.HTTP_PORT, function connectionListener() {
-  debug('GEBEREW API Server running on port %s', config.HTTP_PORT);
-  console.log('GEBEREW API Server running on port'+config.HTTP_PORT);
+  debug('FARMER API Server running on port %s\t', config.HTTP_PORT);
+  //console.log('FARMER API Server running on port\t'+config.HTTP_PORT);
 });
 
-module.exports= app;
+module.exports= app;config
