@@ -1,10 +1,10 @@
 define({ "api": [
   {
     "type": "post",
-    "url": "/musics",
-    "title": "Create Music",
-    "name": "CreateMusic",
-    "group": "Music",
+    "url": "/users/passchange",
+    "title": "Password Change",
+    "name": "ChangePassword",
+    "group": "User",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -12,80 +12,161 @@ define({ "api": [
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "name",
-            "description": "<p>Music Name</p>"
+            "field": "old_password",
+            "description": "<p>Old Password</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "year",
-            "description": "<p>Year OF release</p>"
+            "field": "password",
+            "description": "<p>New Pasword</p>"
           }
         ]
       },
       "examples": [
         {
           "title": "Request Exmaple",
-          "content": "{\n \n  \"name\":  \"music1\",\n  \"year\":   \"1970\"\n }",
-          "type": "json"
-        }
-      ]
-    },
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n {\n\"_id\": \"58af8cbd7544b94c8fa864e7\",\n \"name\": \"Chelsea\",\n\"Year\": \"1978\",\n}",
+          "content": "{\n \"old_password\":\"pass@1234\",\n \"new_password\":\"yonas\"\n}",
           "type": "json"
         }
       ]
     },
     "version": "0.0.0",
-    "filename": "routes/music.js",
-    "groupTitle": "Music"
-  },
-  {
-    "type": "get",
-    "url": "/musics",
-    "title": "Get Music Collections",
-    "name": "Get_Music_Collections",
-    "group": "Music",
-    "success": {
-      "examples": [
-        {
-          "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n[ \n{\n\"_id\": \"58af8cbd7544b94c8fa864e7\",\n \"name\": \"music1\",\n\"Year\": \"1978\",\n\"thumbnail\":\"images/artistx.png\",\n\"path\":\"musics/music.mp3\",\n\"status\":\"enable\"\n}\n{\n\"_id\": \"58af8cbd7544b94c8fa864e7\",\n \"name\": \"music1\",\n\"Year\": \"1978\",\n\"thumbnail\":\"images/artistx.png\",\n\"path\":\"musics/music.mp3\",\n\"status\":\"enable\"\n}\n{\n\"_id\": \"58af8cbd7544b94c8fa864e7\",\n \"name\": \"music1\",\n\"Year\": \"1978\",\n\"thumbnail\":\"images/artistx.png\",\n\"path\":\"musics/music.mp3\",\n\"status\":\"enable\"\n}\n]",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "routes/music.js",
-    "groupTitle": "Music"
+    "filename": "routes/user.js",
+    "groupTitle": "User"
   },
   {
     "type": "post",
-    "url": "/musics/:id",
-    "title": "Uplaod Music",
-    "name": "Upload_Music",
-    "group": "Music",
+    "url": "/users/signup",
+    "title": "Signup User",
+    "name": "CreateUser",
+    "group": "User",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "file",
-            "optional": false,
-            "field": "music",
-            "description": "<p>field Name</p>"
+            "type": "String",
+            "optional": true,
+            "field": "user_name",
+            "description": "<p>Users Username</p>"
           },
           {
             "group": "Parameter",
             "type": "String",
             "optional": false,
-            "field": "id",
-            "description": "<p>music ID</p>"
+            "field": "password",
+            "description": "<p>Users Password</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "realem",
+            "description": "<p>Users Group</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "first_name",
+            "description": "<p>Users First Name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "last_name",
+            "description": "<p>Users last_name</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "email",
+            "description": "<p>Users email</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "Date",
+            "optional": true,
+            "field": "date_of_birth",
+            "description": "<p>Users Date of Birth</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "city",
+            "description": "<p>Users City</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "country",
+            "description": "<p>Users Country</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "mobile",
+            "description": "<p>Users Mobile</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": true,
+            "field": "gender",
+            "description": "<p>Users Gender</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "user_type",
+            "description": "<p>User Type , Like Staff, customer</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request Exmaple",
+          "content": "{\n  \"password\":\"pass@123\",\n  \"email\":\"yonas@xxx.com\",\n  \"first_name\":\"yonas\",\n  \"last_name\":\"engida\",\n  \"user_type\":\"staff\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n  {\n     {\n  \"_id\": \"589fb45b48baee02dc7c713b\",\n \"user_name\": \"Tsegaw\",\n  \"realm\": \"user\",\n  \"profile\": {\n    \"_id\": \"589fb45b48baee02dc7c713c\",\n    \"user\": \"589fb45b48baee02dc7c713b\",\n    \"first_name\": \"Tsegaw\",\n    \"last_name\": \"Tsegaw\",\n    \"email\": \"test@gmail.com\",\n  },\n  \"last_modified\": \"2017-02-12T01:03:23.983Z\",\n  \"status\": \"active\",\n  \"role\": \"staff\"\n}\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/user.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "delete",
+    "url": "/users/:id",
+    "title": "Delete Specific User information",
+    "name": "Delete",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "_id",
+            "description": "<p>Users unique ID.</p>"
           }
         ]
       }
@@ -94,13 +175,278 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response:",
-          "content": "HTTP/1.1 200 OK\n {\n\"_id\": \"58af8cbd7544b94c8fa864e7\",\n \"name\": \"musicq\",\n\"Year\": \"1978\",\n\"path\":\"musics/music1.mp3\"\n}",
+          "content": "    HTTP/1.1 200 OK\n {\n       {\n      \"_id\": \"589fb45b48baee02dc7c713b\",\n      \"user_name\": \"Tsegaw\",\n      \"realm\": \"user\",\n      \"profile\": {\n      \"_id\": \"589fb45b48baee02dc7c713c\",\n      \"user\": \"589fb45b48baee02dc7c713b\",\n      \"first_name\": \"Tsegaw\",\n      \"last_name\": \"Tsegaw\",\n      \"email\": \"test@gmail.com\",\n         },\n    \"last_modified\": \"2017-02-12T01:03:23.983Z\",\n    \"status\": \"active\",\n    \"role\": \"staff\"\n     }\n}",
           "type": "json"
         }
       ]
     },
     "version": "0.0.0",
-    "filename": "routes/music.js",
-    "groupTitle": "Music"
+    "filename": "routes/user.js",
+    "groupTitle": "User"
+  },
+  {
+    "description": "<p>Get Specific User Collection. To get Sepecific user information pass id  as parameter.</p>",
+    "type": "get",
+    "url": "/users/:id",
+    "title": "Request Specific User information",
+    "name": "GetUser",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "string",
+            "optional": false,
+            "field": "_id",
+            "description": "<p>Users unique ID.</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "    HTTP/1.1 200 OK\n{\n       {\n    \"_id\": \"589fb45b48baee02dc7c713b\",\n    \"password\": \"passs@123@123\",\n    \"user_name\": \"Tsegaw\",\n    \"realm\": \"user\",\n     \"profile\": {\n      \"_id\": \"589fb45b48baee02dc7c713c\",\n      \"user\": \"589fb45b48baee02dc7c713b\",\n      \"first_name\": \"Tsegaw\",\n      \"last_name\": \"Tsegaw\",\n      \"email\": \"test@gmail.com\",\n   },\n    \"last_modified\": \"2017-02-12T01:03:23.983Z\",\n    \"status\": \"active\",\n    \"role\": \"staff\"\n  }\n    }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/user.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "get",
+    "url": "/users",
+    "title": "Request Users information",
+    "name": "Get_All_Users",
+    "group": "User",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n  {\n     {\n  \"_id\": \"589fb45b48baee02dc7c713b\",\n  \"user_name\": \"Tsegaw\",\n  \"realm\": \"user\",\n    \"profile\": {\n    \"_id\": \"589fb45b48baee02dc7c713c\",\n    \"user\": \"589fb45b48baee02dc7c713b\",\n    \"first_name\": \"Tsegaw\",\n    \"last_name\": \"Tsegaw\",\n    \"email\": \"test@gmail.com\",\n     },\n  \"last_modified\": \"2017-02-12T01:03:23.983Z\",\n  \"status\": \"active\",\n  \"role\": \"staff\"\n}\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/user.js",
+    "groupTitle": "User"
+  },
+  {
+    "description": "<p>This End point is allow to get  Total Club Count Report.</p>",
+    "type": "get",
+    "url": "/users/count",
+    "title": "Total Users Count",
+    "name": "Get_Total_USer_Count",
+    "group": "User",
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "   HTTP/1.1 200 OK\n{\n   \"total_users_count  \": 1\n }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/user.js",
+    "groupTitle": "User"
+  },
+  {
+    "description": "<p>Get Users Collection by Pagination. Use below parameters to query with pagination :- page=&lt;RESULTS_PAGE&gt; and per_page=&lt;RESULTS_PER_PAGE&gt;.</p>",
+    "type": "get",
+    "url": "/users/paginate?page=<RESULTS_PAGE>&per_page=<RESULTS_PER_PAGE>",
+    "title": "Users Collection by Pagination",
+    "name": "Get_Users_Collection",
+    "group": "User",
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "user_name",
+            "description": "<p>Users Username</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Users Password</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": true,
+            "field": "realem",
+            "description": "<p>Users Group</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "first_name",
+            "description": "<p>Users First Name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "last_name",
+            "description": "<p>Users last_name</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": true,
+            "field": "email",
+            "description": "<p>Users email</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "Date",
+            "optional": true,
+            "field": "date_of_birth",
+            "description": "<p>Users Date of Birth</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": true,
+            "field": "city",
+            "description": "<p>Users City</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": true,
+            "field": "country",
+            "description": "<p>Users Country</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": true,
+            "field": "mobile",
+            "description": "<p>Users Mobile</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": true,
+            "field": "gender",
+            "description": "<p>Users Gender</p>"
+          },
+          {
+            "group": "Success 200",
+            "type": "string",
+            "optional": false,
+            "field": "user_type",
+            "description": "<p>User Type , Like Staff, customer</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n  {\n     {\n  \"_id\": \"589fb45b48baee02dc7c713b\",\n     \"user_name\": \"Tsegaw\",\n  \"realm\": \"user\",\n   \"profile\": {\n    \"_id\": \"589fb45b48baee02dc7c713c\",\n    \"user\": \"589fb45b48baee02dc7c713b\",\n    \"first_name\": \"Tsegaw\",\n    \"last_name\": \"Tsegaw\",\n    \"email\": \"test@gmail.com\",\n  \n  },\n  \"last_modified\": \"2017-02-12T01:03:23.983Z\",\n  \"status\": \"active\",\n  \"role\": \"staff\"\n}\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/user.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "post",
+    "url": "/users/login",
+    "title": "Login",
+    "name": "Login",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "user_name",
+            "description": "<p>Users Username</p>"
+          },
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "password",
+            "description": "<p>Users Password</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request Exmaple",
+          "content": "{\n   \"user_name\":\"afrikik-user\",\n   \"password\":\"dhjsdhjhdjhfajf\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "HTTP/1.1 200 OK\n{\n  {\n  \"token\": \"lxrF2tbwa7bCjnrMjE9P\",\n  \"user\": {\n        \"profile\": {\n          \"_id\": \"58afaeb061fffb6d17477be3\",\n               \"user\": \"58afaea861fffb6d17477be2\",\n               \"first_name\": \"SIMRET MOB1\",\n               \"last_name\": \"yohannes\",\n               \"last_modified\": \"2017-02-28T20:53:23.111Z\"\n            },\n            \"user_name\": \"simret\",\n            \"last_login\": \"2017-03-01T03:17:35.500Z\",\n            \"realm\": \"user\",\n            \"role\": \"customer\",\n             \"status\": \"active\",\n            \"date_created\": \"2017-02-24T03:55:28.307Z\",\n             \"last_modified\": \"2017-03-01T03:17:35.500Z\"\n        }\n       }\n   }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/user.js",
+    "groupTitle": "User"
+  },
+  {
+    "type": "put",
+    "url": "/users/:id",
+    "title": "Update Specific User information",
+    "name": "UpdateUSer",
+    "group": "User",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "Object",
+            "optional": false,
+            "field": "Data",
+            "description": "<p>Update Data</p>"
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Request Exmaple",
+          "content": "{\n \"user_name\":\"afrikik-user\",\n \"password\":\"dhjsdhjhdjhfajf\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success-Response:",
+          "content": "  HTTP/1.1 200 OK\n  {\n     {\n  \"_id\": \"589fb45b48baee02dc7c713b\",\n  \"password\": \"passs@123@123\",\n  \"user_name\": \"Tsegaw\",\n  \"realm\": \"user\",\n   \"profile\": {\n    \"_id\": \"589fb45b48baee02dc7c713c\",\n    \"user\": \"589fb45b48baee02dc7c713b\",\n    \"first_name\": \"Tsegaw\",\n    \"last_name\": \"Tsegaw\",\n    \"email\": \"test@gmail.com\",\n  \n  },\n  \"last_modified\": \"2017-02-12T01:03:23.983Z\",\n  \"status\": \"active\",\n  \"role\": \"staff\"\n}\n  }",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "routes/user.js",
+    "groupTitle": "User"
   }
 ] });
