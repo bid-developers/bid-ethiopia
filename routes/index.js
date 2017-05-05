@@ -8,8 +8,8 @@ var userRouter = require('./user');
 module.exports = function initRouter(app) {
 
   // Events Endpoint
-  app.use('/events', clientRouter);
+  app.use('/events', eventRouter);
   // USers Endpoint
- app.use('/users', muscianRouter);
+ app.use('/users', userRouter);
 
 };

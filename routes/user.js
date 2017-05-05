@@ -2,7 +2,7 @@
 var express   =   require('express');
 
 var user  = require('../controllers/user');
-var auth  = require('../controllers/auth');
+//var auth  = require('../controllers/auth');
 //var authorize = require('../lib/authorize');
 
 // Create a Router
@@ -94,7 +94,7 @@ router.post('/signup', user.createUser);
   *            }
   *        }
   */
-router.post('/login', auth.login);
+//router.post('/login', auth.login);
 /**
  * @api {post} /users/passchange  Password Change
  * @apiName ChangePassword
