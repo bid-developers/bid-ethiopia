@@ -8,7 +8,9 @@ var ProfileDal = require('../dal/profile');
 // Interface for not implemented
 exports.noop = function noop(req, res, next) {
   res.json({
-    message: 'To Implemented!'
+    error:false,
+    message: 'To Implemented!',
+    status:200
   });
 };
 /**
