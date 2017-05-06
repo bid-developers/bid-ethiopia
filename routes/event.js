@@ -35,7 +35,13 @@ var router = express.Router();
  * }
  */
 router.post('/', event.createEvent);
-
+/**
+ * @api {get} /events  Get Events
+ * @apiName Get Events
+ * @apiGroup Event
+ *
+ *
+*/
 router.get('/', event.getEvents);
 
 module.exports= router;

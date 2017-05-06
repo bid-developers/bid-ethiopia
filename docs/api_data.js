@@ -53,6 +53,16 @@ define({ "api": [
     "groupTitle": "Event"
   },
   {
+    "type": "get",
+    "url": "/events",
+    "title": "Get Events",
+    "name": "Get_Events",
+    "group": "Event",
+    "version": "0.0.0",
+    "filename": "routes/event.js",
+    "groupTitle": "Event"
+  },
+  {
     "type": "post",
     "url": "/users/passchange",
     "title": "Password Change",
