@@ -187,7 +187,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Request Exmaple",
-          "content": "{\n  \"password\":\"pass@123\",\n  \"email\":\"yonas@xxx.com\",\n  \"first_name\":\"yonas\",\n  \"last_name\":\"engida\",\n  \"user_type\":\"staff\"\n}",
+          "content": "{\n\n    \"user_name\":\"yonas\",\n    \"password\":\"test@123\",\n    \"user_type\":\"customer\",\n    \"first_name\":\"yonas\",\n    \"last_name\":\"engida\",\n    \"email\":\"yengida@gmail.com\",\n    \"mobile\":\"0930015100\"\n}",
           "type": "json"
         }
       ]

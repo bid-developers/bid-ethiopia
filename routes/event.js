@@ -34,6 +34,8 @@ var router = express.Router();
  *   "event_date":"engida",
  * }
  */
-router.post('/', event.noop);
+router.post('/', event.createEvent);
+
+router.get('/', event.getEvents);
 
 module.exports= router;

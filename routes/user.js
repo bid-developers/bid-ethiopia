@@ -29,11 +29,15 @@ var router = express.Router();
  * 
  * @apiParamExample Request Exmaple
  * {
- *   "password":"pass@123",
- *   "email":"yonas@xxx.com",
- *   "first_name":"yonas",
- *   "last_name":"engida",
- *   "user_type":"staff"
+
+    "user_name":"yonas",
+    "password":"test@123",
+    "user_type":"customer",
+    "first_name":"yonas",
+    "last_name":"engida",
+    "email":"yengida@gmail.com",
+    "mobile":"0930015100"
+
  * }
  * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK

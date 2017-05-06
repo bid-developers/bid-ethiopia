@@ -9,16 +9,16 @@ var config    = require('../config');
 var EventDal       = require('../dal/event');
 
 /**
- * Validate Users
+ * Validate Events
  */
 /**
- * @disc UserID id validation interface
- * @param {id} unique UserId ID
+ * @disc EventID id validation interface
+ * @param {id} unique EventId ID
  * @param {req} http request
  * @param {res} Http response
  * @param {next} middlware dispatcher
  */
-exports.validateUser = function validateUser(req, res, next, id) {
+exports.validateEvent = function validateEvent(req, res, next, id) {
   //Validate the id is mongoid or not
   req.checkParams('id', 'Invalid param').isMongoId(id);
 
@@ -33,15 +33,15 @@ exports.validateUser = function validateUser(req, res, next, id) {
     });
 
   } else {
-    UserDal.get({ _id: id }, function (err, user) {
-      if (user._id) {
-        req.user = user._id;
+    EventDal.get({ _id: id }, function (err, doc) {
+      if (doc._id) {
+        req.doc = doc._id;
         next();
       } else {
         res.status(404)
           .json({
             error: true, status: 404,
-            message: 'user _id ' + id + ' not fount'
+            message: 'Event _id ' + id + ' not fount'
           });
       }
     });
@@ -50,11 +50,11 @@ exports.validateUser = function validateUser(req, res, next, id) {
 
 
 /**
- * Create User
+ * Create Event
  * 1. Validate Data
- * 2. Create User
+ * 2. Create Event
  * 3. Create Profile
- * 4. Create UserType(Staff / Customer)
+ * 4. Create EventType(Staff / Customer)
  * 5. Response
  * 
  * @param {req} HTTP request
@@ -63,36 +63,38 @@ exports.validateUser = function validateUser(req, res, next, id) {
  * 
  */
 
-exports.createUser = function createUser(req, res, next) {
-  debug('create user');
+exports.createEvent = function createEvent(req, res, next) {
+  debug('create Event');
+  console.log("Create Event");
 
   var workflow = new events.EventEmitter();
   var body = req.body;
 
 
-  workflow.on('validateUser', function validateUser() {
-    debug('validate user');
-    // Validate User Data
+  workflow.on('validateEvent', function validateEvent() {
+    debug('validate Event');
+     console.log("Validate Event");
+    // Validate Event Data
 
     //  //req.assert('password', '6 to 20 characters required').len(6, 20);
-    req.checkBody('password')
-      .notEmpty().withMessage('password should not be empty')
-      .len(6, 20).withMessage('6 to 20 characters required');
+    req.checkBody('subject')
+      .notEmpty().withMessage('Subject should not be empty');
+    
 
-    req.checkBody('first_name', 'First Name Should not be empty!')
+    req.checkBody('location', 'Location Should not be empty!')
       .notEmpty().withMessage('Should not be Empty');
-   req.checkBody('last_mame', 'Last Name Should not be empty!')
+    req.checkBody('event_date', 'Event Date Should not be empty!')
       .notEmpty().withMessage('Should not be Empty');
 
-      req.checkBody('email', 'Email Should not be empty!')
+      req.checkBody('speaker', 'Speaker Should not be empty!')
       .notEmpty().withMessage('Should not be Empty');
 
     // req.checkBody('last_name')
     //   .notEmpty().withMessage('Should not be Empty');
-    // req.checkBody('user_type', 'User Type is Invalid!')
-    // //   .notEmpty().withMessage('User Type should not be Empty')
+    // req.checkBody('Event_type', 'Event Type is Invalid!')
+    // //   .notEmpty().withMessage('Event Type should not be Empty')
 
-    //   .isIn(['staff', 'customer']).withMessage('User Type should either be customer or staff');
+    //   .isIn(['staff', 'customer']).withMessage('Event Type should either be customer or staff');
 
 
     var validationErrors = req.validationErrors();
@@ -102,170 +104,86 @@ exports.createUser = function createUser(req, res, next) {
       res.json(validationErrors);
 
     } else {
-      workflow.emit('checkUserExist');
+     workflow.emit('checkEventExist');
 
     }
 
   });
   /**
-   * Check for user exist or not
+   * Check for Event exist or not
    */
-  workflow.on('checkUserExist', function checkUserExist() {
-    var user_name = body.user_name;
+  workflow.on('checkEventExist', function checkEventExist() {
+    
+    var subject = body.subject;
 
-    // Query DB for a user with the given ID
-    UserDal.get({ user_name: user_name }, function cb(err, user) {
+    // Query DB for a Event with the given ID
+    EventDal.get({subject:subject }, function cb(err, doc) {
       if (err) {
         return next(err);
       }
 
-      // If user find return it
-      if (user._id) {
+      // If Event find return it
+      if (doc._id) {
         res.status(409);
         res.json({
           error: true,
-          message: 'User Already Exist, Pelase try for other option!',
+          message: 'Event Already Exist, Pelase try for other option!',
           status: 409
         });
 
       } else {
-        workflow.emit('createUser');
+     
+        workflow.emit('createEvent');
       }
     });
 
   });
-  workflow.on('createUser', function createUser() {
+  workflow.on('createEvent', function createEvent() {
 
-    debug('Creating user');
-    // Create User
-    UserDal.create({
-      password: body.password,
-      user_name: body.user_name,
-      role: body.user_type,
-      realm: body.realm ? body.realm : 'user'
-
-    }, function callback(err, user) {
+    debug('Creating Event');
+      // Create Event
+    EventDal.create(body, function callback(err, event) {
       if (err) {
         return next(err);
       }
 
-      workflow.emit('createProfile', user);
+      workflow.emit('respond', event);
 
     });
 
   });
 
-  workflow.on('createProfile', function createProfile(user) {
-    debug('Creating Profile');
-    // Create Profile
-    ProfileDal.create({
-      user: user._id,
-      first_name: body.first_name,
-      last_name: body.last_name,
-      email: body.email
-    }, function callback(err, profile) {
-      if (err) {
-        return next(err);
-      }
-     else {
-        //  console.log(profile)
-        UserDal.update({ _id: user._id }, { $set: { profile: profile._id } }, function callback2(err, user) {
-          if (err) {
-            return next(err);
-          }
-          // console.log('profile ID'+profile+'user ID'+user);
-          workflow.emit('createUserType', user, profile);
-
-        });
-      }
-
-    });
-
-  });
-
-
-  workflow.on('createUserType', function createUserType(user, profile) {
-    debug('Create User Type');
-    // Create User Type
-    var now = moment().toISOString();
-    if (body.user_type === 'staff') {
-      StaffDal.create({
-        profile: profile._id,
-        //company: body.company
-      }, function callback1(err, staff) {
-        if (err) {
-          return next(err);
-        }
-
-
-
-        ProfileDal.update({ _id: profile._id }, {staff: staff._id }, function updateCb(err, profile) {
-          if (err) {
-            return next(err);
-          }
-          debug(user);
-          workflow.emit('respond', user);
-        });
-
-      });
-
-    } else if (body.user_type === 'customer') {
-
-      CustomerDal.create({
-        profile: profile._id,
-        date_created: now,
-        last_modified: now
-      }, function callback2(err, customer) {
-        if (err) {
-          return next(err);
-        }
-
-        ProfileDal.update({ _id: profile._id }, { customer: customer._id }, function updateCb(err, profile) {
-          if (err) {
-            return next(err);
-          }
-          workflow.emit('respond', customer);
-        });
-
-
-      });
-
-    }
-
-
-  });
-
-  workflow.on('respond', function respond(user) {
+  workflow.on('respond', function respond(event) {
 
     res.status(201);
-    res.json(user);
+    res.json(event);
 
   });
 
-  workflow.emit('validateUser');
+  workflow.emit('validateEvent');
 
 };
 
 /**
- * Get User
+ * Get Event
  */
-exports.getUser = function getUser(req, res, next) {
-  var userId = req.params.id;
+exports.getEvent = function getEvent(req, res, next) {
+  var EventId = req.params.id;
 
-  // Query DB for a user with the given ID
-  UserDal.get({ _id: userId }, function cb(err, user) {
+  // Query DB for a Event with the given ID
+  EventDal.get({ _id: EventId }, function cb(err, Event) {
     if (err) {
       return next(err);
     }
-    // If user find return it
-    if (user._id) {
-      res.json(user);
+    // If Event find return it
+    if (Event._id) {
+      res.json(Event);
 
     } else {
       res.status(404);
       res.json({
         error: true,
-        message: 'User Requested Not Found!',
+        message: 'Event Requested Not Found!',
         status: 404
       });
 
@@ -274,32 +192,32 @@ exports.getUser = function getUser(req, res, next) {
 };
 
 /**
- * Update User
+ * Update Event
  */
-exports.updateUser = function updateUser(req, res, next) {
+exports.updateEvent = function updateEvent(req, res, next) {
   var body = req.body;
-  var userId = req.params.id;
+  var EventId = req.params.id;
 
-  // Update user profile
-  UserDal.update({ _id: userId }, body, function update(err, user) {
+  // Update Event profile
+  EventDal.update({ _id: EventId }, body, function update(err, Event) {
     if (err) {
       return next(err);
     }
 
-    if (!user) {
+    if (!Event) {
       res.status(404);
       res.json({
         error: true,
-        message: 'User To Be Updated Not Found!',
+        message: 'Event To Be Updated Not Found!',
         status: 404
       });
       return;
 
     } else {
 
-      res.json(user);
+      res.json(Event);
 
-      console.log(user);
+      console.log(Event);
 
 
 
@@ -309,18 +227,18 @@ exports.updateUser = function updateUser(req, res, next) {
 
 
 /**
- * Remove Users
+ * Remove Events
  */
-exports.removeUser = function removeUser(req, res, next) {
+exports.removeEvent = function removeEvent(req, res, next) {
 };
 
 
 /**
- * Get Users
+ * Get Events
  */
-exports.getUsers = function getUsers(req, res, next) {
-  // Retrieve all the Users
-  UserDal.getCollection({}, function getAllUsers(err, docs) {
+exports.getEvents = function getEvents(req, res, next) {
+  // Retrieve all the Events
+  EventDal.getCollection({}, function getAllEvents(err, docs) {
     if (err) {
       return next(err);
     }
@@ -337,94 +255,7 @@ exports.noop = function noop(req, res, next) {
   });
 };
 
-exports.passwordChange = function passwordChange(req, res, next) {
-  var body = req.body;
-  var now = moment().toISOString();
 
-  var workflow = new events.EventEmitter();
-
-  workflow.on('validateInput', function validateInput() {
-    req.checkBody('old_password', "invalid old_password")
-      .notEmpty();
-
-    req.checkBody('new_password', "invalid old_password")
-      .notEmpty();
-
-    var validationErrors = req.validationErrors();
-    if (validationErrors) {
-      res.json(validationErrors);
-    } else {
-      workflow.emit('validateUsername')
-    }
-  });
-
-  workflow.on('validateUsername', function validateUsername() {
-    UserDal.get({ user_name: req._user.user_name }, function getUser(err, user) {
-      if (err) {
-        return next(err);
-      }
-
-      if(!user._id){
-        res.status(404);
-        res.json({message:"user is not found"});
-        return;
-      }
-      else{
-         workflow.emit('checkPassword', user);
-      }
-    });
-
-  });
-  workflow.on('checkPassword', function checkPassword(user) {
-    user.checkPassword(body.old_password, function check(err, isOk) {
-      if (err) {
-        return next(err);
-      }
-      if (!isOk) {
-        res.status(403);
-        res.json({ message: "wrong password" });
-        return;
-      }
-      else {
-        workflow.emit('changePassword', user);
-      }
-
-    });
-  });
-  workflow.on('changePassword', function passwordChange(user) {
-    bcrypt.genSalt(config.SALT_LENGTH, function genSalt(err, salt) {
-      if (err) {
-        return next(err);
-      }
-      bcrypt.hash(body.new_password, salt, function hashPasswd(err, hash) {
-        if (err) {
-          return next(err);
-        }
-
-
-        var now = moment().toISOString();
-        UserDal.update({ _id: user._id }, { password: hash, last_modified: now }, function updatepass(err, user) {
-          if (err) {
-            return next(err);
-          }
-          else {
-            workflow.emit('respond');
-          }
-        });// end of update
-
-      });// end of hash
-
-
-    });// end of gensalt
-
-  });
-  workflow.on('respond', function respond() {
-    res.json({ message: "Sucessfully changed." })
-  });
-  workflow.emit('validateInput');
-
-
-};
 //Export By Pagination
 exports.getByPagination = function getByPagination(req, res, next) {
 
@@ -437,7 +268,7 @@ exports.getByPagination = function getByPagination(req, res, next) {
    limit:limit
   };
 //console.log(queryOpts);
-  UserDal.getCollectionBYPagination(query,queryOpts, function getByPaginationCb(err, doc) {
+  EventDal.getCollectionBYPagination(query,queryOpts, function getByPaginationCb(err, doc) {
     if (err) {
       return next(err);
     }
@@ -457,16 +288,16 @@ exports.getByPagination = function getByPagination(req, res, next) {
 
 
 /**
- * USer Count
+ * Event Count
  */
-exports.usersCount = function usersCount(req, res, next){
+exports.eventsCount = function eventsCount(req, res, next){
   
-  UserDal.total({}, function(err, count){
+  EventDal.total({}, function(err, count){
      if(err){
        return next(err);
      }
      res.json({
-       "total_users_count":count
+       "total_events_count":count
      });
   });
 };

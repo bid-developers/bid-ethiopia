@@ -70,8 +70,8 @@ app.use(function errorHandler(err, req, res, next) {
 
 // Listen to HTTP Port
 app.listen(config.HTTP_PORT, function connectionListener() {
-  debug('FARMER API Server running on port %s\t', config.HTTP_PORT);
+  debug('BID_EVENTS API Server running on port %s\t', config.HTTP_PORT);
   //console.log('FARMER API Server running on port\t'+config.HTTP_PORT);
 });
 
-module.exports= app;config
+module.exports= app;

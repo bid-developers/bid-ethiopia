@@ -10,6 +10,6 @@ module.exports = function initRouter(app) {
   // Events Endpoint
   app.use('/events', eventRouter);
   // USers Endpoint
- app.use('/users', userRouter);
+  app.use('/users', userRouter);
 
 };

@@ -11,7 +11,7 @@
 var debug   = require('debug')('api:dal-event');
 var moment  = require('moment');
 
-var event        = require('../models/event');
+var Event        = require('../models/event');
 
 var population = [{
   path: 'Event'

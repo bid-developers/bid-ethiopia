@@ -81,20 +81,22 @@ exports.createUser = function createUser(req, res, next) {
       .notEmpty().withMessage('password should not be empty')
       .len(6, 20).withMessage('6 to 20 characters required');
 
-    req.checkBody('first_name', 'First Name Should not be empty!')
+     req.checkBody('first_name', 'First Name Should not be empty!')
       .notEmpty().withMessage('Should not be Empty');
-   req.checkBody('last_mame', 'Last Name Should not be empty!')
+     req.checkBody('last_name', 'Last Name Should not be empty!')
       .notEmpty().withMessage('Should not be Empty');
 
       req.checkBody('email', 'Email Should not be empty!')
       .notEmpty().withMessage('Should not be Empty');
+     req.checkBody('mobile', 'Mobile Should not be empty!')
+      .notEmpty().withMessage('Should not be Empty');
 
     // req.checkBody('last_name')
     //   .notEmpty().withMessage('Should not be Empty');
-    // req.checkBody('user_type', 'User Type is Invalid!')
-    // //   .notEmpty().withMessage('User Type should not be Empty')
+    req.checkBody('user_type', 'User Type is Invalid!')
+      .notEmpty().withMessage('User Type should not be Empty')
 
-    //   .isIn(['staff', 'customer']).withMessage('User Type should either be customer or staff');
+      .isIn(['staff', 'customer']).withMessage('User Type should either be customer or staff');
 
 
     var validationErrors = req.validationErrors();
