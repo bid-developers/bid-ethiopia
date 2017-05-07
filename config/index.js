@@ -12,8 +12,9 @@ module.exports = {
   HTTP_PORT: HTTP_PORT,
 
   // MONGODB URL
- MONGODB_URL: 'mongodb://localhost/bid-event',
-  
+ //MONGODB_URL: 'mongodb://localhost/bid-event',
+ MONGODB_URL: 'mongodb://bid:bid@ds133321.mlab.com:33321/bidbevent',
+ 
   // SALT VALUE LENGTH
   SALT_LENGTH :7,
   
